@@ -30,7 +30,7 @@ void get_environment(TString background) {
 
   TEnv *xs = new TEnv("INPUT");
 
-  TString *base = new TString("/home/home1/institut_3a/mukherjee/Limit_RPVLFV13TeV/scripts/xs.cfg");
+  TString *base = new TString("/user/mukherjee/limits_LFV/scripts/xs.cfg");
   //TString *base = new TString("/home/home1/institut_3a/gueth/ANALYSIS_skimmer_v104/macro/SirPlotAlot_thomas/SirPlotAlot/xs.cfg");
 
   const char* ret;
@@ -51,7 +51,7 @@ void get_environment(TString background) {
   }  
   */
 
-  xs->ReadFile("/home/home1/institut_3a/mukherjee/Limit_RPVLFV13TeV/scripts/xs.cfg", kEnvChange); 
+  xs->ReadFile("/user/mukherjee/limits_LFV/scripts/xs.cfg", kEnvChange); 
   //xs->ReadFile("/home/home1/institut_3a/gueth/ANALYSIS_skimmer_v104/macro/SirPlotAlot_thomas/SirPlotAlot/xs.cfg", kEnvChange);
 
   lumi_scale = xs->GetValue("lumi", -1.);

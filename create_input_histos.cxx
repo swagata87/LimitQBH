@@ -33,13 +33,13 @@ void create_input_histos(int width_signal_region){
   //change to names of directories / bkgs in datacard
 
   TString rootfilenames[] = {
-"/net/scratch_cms/institut_3a/mukherjee/LFV/ttbar_tot.root",
-"/net/scratch_cms/institut_3a/mukherjee/LFV/WW_tot.root",
-"/net/scratch_cms/institut_3a/mukherjee/LFV/SingleTop_tot.root",
-"/net/scratch_cms/institut_3a/mukherjee/LFV/DY_tot.root",
-"/net/scratch_cms/institut_3a/mukherjee/LFV/WZ_tot.root",
-"/net/scratch_cms/institut_3a/mukherjee/LFV/ZZ_tot.root",
-"/net/scratch_cms/institut_3a/mukherjee/LFV/Wjet_QCD_tot.root"
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/ttbar_tot.root",
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/WW_tot.root",
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/SingleTop_tot.root",
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/DY_tot.root",
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/WZ_tot.root",
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/ZZ_tot.root",
+"/net/scratch_cms/institut_3a/mukherjee/LFV/BACKGROUND/merged/Wjet_QCD_tot.root"
 };
 
   TString sample_names[] = {"TT_tot","WW_tot","single_top_tot","DY_tot","WZ_tot","ZZ_tot","Wjet_tot"};
@@ -86,16 +86,17 @@ void create_input_histos(int width_signal_region){
   }  
 
   TF1* fit_resolution=new TF1("fit_resolution","[0]+[1]*x+[2]*x*x+[3]*x*x*x",mass_min,mass_max);
-  fit_resolution->SetParameter(0,0.012830);
-  fit_resolution->SetParameter(1,0.000015);  
-  fit_resolution->SetParameter(2,0.0);
-  fit_resolution->SetParameter(3,0.0);   
+  fit_resolution->SetParameter(0,0.013);
+  fit_resolution->SetParameter(1,1.5e-05);  
+  fit_resolution->SetParameter(2,-3.8e-09);
+  fit_resolution->SetParameter(3,4.4e-13);   
  
   //###############
   //loop over backgrounds
   //###############  
   if (debug) std::cout << "will start background loop"<< std::endl;
-  
+  double Lumi_bkg = (1600.0/1000.0);
+  double ttbar_kfact = 1.138;
   for (int i = 0; i < arraySize; ++i){
     if (debug) std::cout << "will get the bkg root file"<< std::endl;
     std::cout << "rootfilename " << rootfilenames[i] << "  sample_name " << sample_names[i] << std::endl;
@@ -107,6 +108,12 @@ void create_input_histos(int width_signal_region){
     if (debug) std::cout << "will get the hist h1_0_emu_Mass"<< std::endl;
     
     hist_ori=(TH1F*)infile->Get("emu/Stage_0/h1_0_emu_Mass");
+    hist_ori->Scale(Lumi_bkg);
+    if (sample_names[i]=="TT_tot") {
+      std::cout << "Extra k-factor scaling will be done for TTbar background" << std::endl;
+      hist_ori->Scale(ttbar_kfact);
+    }
+      
     hist_ori->SetName(sample_names[i]);
     
     outfile->cd();
@@ -173,7 +180,7 @@ void create_input_histos(int width_signal_region){
 
   //TAG get the file with the data histogram
   if (debug) std::cout << "will get data root file"<< std::endl;
-  TFile* data_file = new TFile("/net/scratch_cms/institut_3a/mukherjee/LFV/allData.root");
+  TFile* data_file = new TFile("/net/scratch_cms/institut_3a/mukherjee/LFV/DATA_25/merged/allData.root");
   TH1F* data;
   //  data=(TH1F*)data_file->Get("h1_inv_mass_1mu_1tau_aligned_7_0");
   if (debug) std::cout << "will get data hist"<< std::endl;
@@ -199,12 +206,12 @@ void create_input_histos(int width_signal_region){
   
   TF1* gauss = new TF1("gauss","TMath::Gaus(x,[0],[1])",mass_sig-8*resolution,mass_sig+8*resolution);
 
-  TF1* fit_acceff=new TF1("fit_acceff","[0]+[1]/(x+[2])+[3]*x",300.,6000.);
+  TF1* fit_acceff=new TF1("fit_acceff","[0]+[1]/(x+[2])+[3]*x",200.,6000.);
  
-  fit_acceff->SetParameter(0,0.8248);
-  fit_acceff->SetParameter(1,-161.9);  
-  fit_acceff->SetParameter(2,143.777824);
-  fit_acceff->SetParameter(3,-0.000025); 
+  fit_acceff->SetParameter(0,0.8184);
+  fit_acceff->SetParameter(1,-124.6);  
+  fit_acceff->SetParameter(2,100.090490);
+  fit_acceff->SetParameter(3,-0.000024); 
 
   double acceff=0.7;
 
