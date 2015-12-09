@@ -20,10 +20,10 @@ fi
 echo "MAKE sure that you edited EmuSpectrum_datacard.txt which is used as input for the limit calculation!!!!!"
 sleep 5
 
-mass_min=1200
-mass_max=2000
+mass_min=200
+mass_max=5000
 
-mass_binning=200
+mass_binning=100
 
 ./create_input_dirs.sh $2 ${mass_min} ${mass_max} ${mass_binning}
 
@@ -80,13 +80,16 @@ then
       cp EmuSpectrum_datacard.txt $2/input_masses/Mass_${mass}_input/tmp.txt
       
       number_signal_events=$(cat $2/input_masses/Mass_${mass}_input/normalization.txt | grep "signal $mass" | awk '{print $3}')
-      num_observed_events=$(cat $2/input_masses/Mass_${mass}_input/normalization.txt | grep "data" | awk '{print $3}')
+      num_observed_events=$(cat $2/input_masses/Mass_${mass}_input/normalization.txt | grep "data data_obs" | awk '{print $3}')
       
+      echo "number_signal_events = " $number_signal_events
+      echo "num_observed_events  = " $num_observed_events
+
       cat $2/input_masses/Mass_${mass}_input/normalization.txt | grep 'bkg ' | grep -v Up | grep -v Down > tmp.txt
       
   #rates=`echo @rate_signal@`
       rates=`echo ${number_signal_events}`
-      
+      echo "rates = " $rates
       while read line
 	do
 	
@@ -98,8 +101,8 @@ then
       done < "tmp.txt"
       
       rm -f tmp.txt
-
-      sed -e s/@root_input_file@/out_mass_${mass}.root/g -e s/@rate_signal@/${number_signal_events}/g -e s/@num_observed_events@/${num_observed_events}/g -e s/@rates@/"${rates}"/g $2/input_masses/Mass_${mass}_input/tmp.txt >> $2/input_masses/Mass_${mass}_input/EmuSpectrum_datacard.txt
+      echo "Now do sed"
+      sed -e s/@root_input_file@/out_mass_${mass}.root/g -e  s/@rate_signal@/"${number_signal_events}"/g -e  s/@num_observed_events@/"${num_observed_events}"/g -e  s/@rates@/"${rates}"/g  $2/input_masses/Mass_${mass}_input/tmp.txt >> $2/input_masses/Mass_${mass}_input/EmuSpectrum_datacard.txt
       
       cp $2/input_masses/Mass_${mass}_input/EmuSpectrum_datacard.txt $2/output_masses/Mass_${mass}_output/EmuSpectrum_datacard.txt
 

@@ -34,9 +34,9 @@ void get_expected_limit(TString in_dir)
   int mass_min=200;
   int mass_inter_0=400;  
   int mass_inter_1=500;
-  int mass_inter_2=600;  
-  int mass_inter_3=700;
-  int mass_max=1000;
+  int mass_inter_2=800;  
+  int mass_inter_3=900;
+  int mass_max=5000;
 
   int binning_0=100;
   int binning_1=100;
@@ -483,7 +483,7 @@ void get_expected_limit(TString in_dir)
     CMS_text_2->SetTextAngle(0);
     CMS_text_2->Draw("same");    
 
-    TLatex* lumiText = new TLatex(0.95,0.975,"1.6 fb^{-1} (13 TeV)");
+    TLatex* lumiText = new TLatex(0.95,0.975,"2.5 fb^{-1} (13 TeV)");
     lumiText->SetNDC();
     lumiText->SetTextFont(42);
     lumiText->SetTextSize(0.04);

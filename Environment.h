@@ -57,12 +57,13 @@ void get_environment(TString background) {
   lumi_scale = xs->GetValue("lumi", -1.);
   if (lumi_scale<0) errormsg("lumi"); 
 
-  BGnumberofevents = xs->GetValue(background+".Nev", -1.);
+  //  BGnumberofevents = xs->GetValue(background+".Nev", -1.);
   BGcrosssection   = xs->GetValue(background+".xs", -1.);
   BGweight         = xs->GetValue(background+".weight", -1.);    
 
 
-  if (BGnumberofevents<0 || BGcrosssection<0 || BGweight<0)
+  // if (BGnumberofevents<0 || BGcrosssection<0 || BGweight<0)
+  if (BGcrosssection<0 || BGweight<0)                                                                                         
     {errormsg(background);}
 
   delete base;
