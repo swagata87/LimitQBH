@@ -27,13 +27,13 @@ void create_input_histos(int width_signal_region){
   TFile* infile; 
 
   TString rootfilenames[] = {
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/ttbar_tot.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/WW_tot.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/SingleTop_tot.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/DY_tot.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/WZ_tot.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/ZZ_tot.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/QCD.root"
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/ttbar_tot.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/WW_tot.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/SingleTop_tot.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/DY_tot.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/WZ_tot.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/ZZ_tot.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Dec_15/QCD.root"
 };
 
   //TString sample_names[] = {"TT_tot","WW_tot","single_top_tot","WZ_tot","ZZ_tot","datadriven"};
@@ -359,7 +359,7 @@ void create_input_histos(int width_signal_region){
       //set the signal PDFs here
 
       //TAG get signal cross section
-      sprintf(file_title,"LQD_001_LLE_001_MSnl_scale_down_%d",(int)mass_sig);
+      sprintf(file_title,"LQD_01_LLE_01_MSnl_scale_down_%d",(int)mass_sig);
       get_environment(file_title);
       xsec=BGcrosssection;
 
@@ -369,7 +369,7 @@ void create_input_histos(int width_signal_region){
       signal_temp=new TH1D("signal_temp","",6200,0.,6200.); 	  
       signal_temp->FillRandom("gauss",10000);
       signal_temp->Sumw2();
-      signal_temp->Scale(xsec*acceff*lumi_scale/10000.);
+      signal_temp->Scale((xsec/1000.0)*acceff*lumi_scale/10000.);
       myfile << "signal " << mass_sig << " " << signal_temp->Integral(1,6000) << "\n";
 	  
       /*
