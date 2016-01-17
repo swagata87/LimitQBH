@@ -201,7 +201,7 @@ void limit_scan()
   graph_lambdaP_0->SetMarkerSize(1.2); 
   graph_lambdaP_0->SetMarkerColor(kRed);  
   graph_lambdaP_0->GetYaxis()->SetRangeUser(0.0005,0.2);
-  graph_lambdaP_0->GetXaxis()->SetRangeUser(200.,4000.);
+  graph_lambdaP_0->GetXaxis()->SetRangeUser(200.,5000.);
 
   graph_lambdaP_0->GetXaxis()->SetTitleFont(42);
   graph_lambdaP_0->GetYaxis()->SetTitleFont(42);
@@ -228,7 +228,7 @@ void limit_scan()
   graph_lambdaP_1->SetMarkerSize(1.2); 
   graph_lambdaP_1->SetMarkerColor(kBlue);   
   graph_lambdaP_1->GetYaxis()->SetRangeUser(0.001,0.4);  
-  graph_lambdaP_1->GetXaxis()->SetRangeUser(200.,4000.);
+  graph_lambdaP_1->GetXaxis()->SetRangeUser(200.,5000.);
 
   //lambdaP=0.01
   double lambdaP_solution_2[200];
@@ -246,7 +246,7 @@ void limit_scan()
   graph_lambdaP_2->SetMarkerSize(1.2);
   graph_lambdaP_2->SetMarkerColor(kGreen);    
   graph_lambdaP_2->GetYaxis()->SetRangeUser(0.001,0.4); 
-  graph_lambdaP_2->GetXaxis()->SetRangeUser(200.,4000.);
+  graph_lambdaP_2->GetXaxis()->SetRangeUser(200.,5000.);
 
   //lambdaP=0.007
   double lambdaP_solution_3[200];
@@ -264,7 +264,7 @@ void limit_scan()
   graph_lambdaP_3->SetMarkerSize(1.2);
   graph_lambdaP_3->SetMarkerColor(kBlack);    
   graph_lambdaP_3->GetYaxis()->SetRangeUser(0.001,0.4); 
-  graph_lambdaP_3->GetXaxis()->SetRangeUser(200.,4000.);
+  graph_lambdaP_3->GetXaxis()->SetRangeUser(200.,5000.);
 
   //Let's draw it
 

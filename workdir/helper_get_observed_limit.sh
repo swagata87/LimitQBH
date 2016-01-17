@@ -27,12 +27,12 @@ do
 
   cd $direct/condor
 
-#   if [ -e observed_limit.root ]
-#       then
-#       echo "observed_limit.root already exists in $direct "
-#       cd $startdir
-#       continue
-#   fi
+   if [ -e observed.root ]
+       then
+       echo "observed_limit.root already exists in $direct "
+       cd $startdir
+       continue
+   fi
 
 #   filelist=`ls | grep higgsCombine | grep root`
 
@@ -55,17 +55,17 @@ do
 #  done
 
 
-#    Nobserved=`ls | grep higgsCombine | grep root | grep mH50 | head -n 1 | wc -l`
-
-#   if [ $Nobserved -ne 1 ]
-#        then
-#        echo "$direct: number of observed limit(s) is $Nobserved, should be 1"
-#        cd $startdir
-#        continue      
-#    else
-#        file_observed=`ls | grep higgsCombine | grep root | grep mH50 | head -n 1`
-#        mv ${file_observed} observed_limit.root
-#    fi
+   Nobserved=`ls | grep higgsCombine | grep root | grep mH50 | head -n 1 | wc -l`
+   
+   if [ $Nobserved -ne 1 ]
+       then
+       echo "$direct: number of observed limit(s) is $Nobserved, should be 1"
+        cd $startdir
+        continue      
+    else
+        file_observed=`ls | grep higgsCombine | grep root | grep mH50 | head -n 1`
+        mv ${file_observed} observed.root
+    fi
       
 
   if [ -e expected.root ]

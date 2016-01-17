@@ -35,14 +35,14 @@ void get_expected_limit(TString in_dir)
 
   int mass_min=200;
   int mass_inter_0=1000;  
-  int mass_inter_1=3200;
+  int mass_inter_1=1600;
   //  int mass_inter_2=2800;  
   //  int mass_inter_3=3400;
   int mass_max=4000;
 
   int binning_0=100;
   int binning_1=200;
-  int binning_2=800;
+  int binning_2=200;
   // int binning_3=600;  
   //int binning_4=0;  
 
@@ -184,11 +184,12 @@ void get_expected_limit(TString in_dir)
       TString basedir="/user/mukherjee/limits_LFV/scripts/";
       TString *massdir=new TString(mass_dir);
       TString filename=basedir+in_dir+*massdir+"/condor/expected.root";
-      
+      TString filename_observed = basedir+in_dir+*massdir+"/condor/observed.root";
+
       double limit;
       
       TFile *expected_file=new TFile(filename);
-      //TFile *observed_file=new TFile(filename_observed);      
+      TFile *observed_file=new TFile(filename_observed);      
       
       TTree *tree = (TTree*)expected_file->Get("limit");
       tree->ResetBranchAddresses();
@@ -221,7 +222,7 @@ void get_expected_limit(TString in_dir)
       delete expected_file;
       delete massdir;
 
-      /*
+      
       TTree *tree_observed = (TTree*)observed_file->Get("limit");
 
       tree_observed->ResetBranchAddresses();
@@ -234,24 +235,24 @@ void get_expected_limit(TString in_dir)
       }
       
       observed[counter_masses]=limit;
-      */
-      //cout << "Mass: " << mass << " observed limit: " << limit << endl;
+      
+      //  cout << "Mass: " << mass << " observed limit: " << limit ;
 
       xs_expected[counter_masses]=expected[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
-      //xs_observed[counter_masses]=observed[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
+      xs_observed[counter_masses]=observed[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
       xs_expected_68_up[counter_masses]=expected_68_up[counter_masses]*xsec_NLO[counter_masses];
       xs_expected_68_down[counter_masses]=expected_68_down[counter_masses]*xsec_NLO[counter_masses];   
       xs_expected_95_up[counter_masses]=expected_95_up[counter_masses]*xsec_NLO[counter_masses];
       xs_expected_95_down[counter_masses]=expected_95_down[counter_masses]*xsec_NLO[counter_masses]; 
 
-      //observed_limit_xsec << limit*xsec_NLO[counter_masses]  << endl;
+      observed_limit_xsec << limit*xsec_NLO[counter_masses]  << endl;
       expected_limit_xsec << xs_expected[counter_masses]  << endl;      
 
-      //observed_limit_mass_kM << mass << " " << kM << " " << limit*xsec_NLO[counter_masses] << endl;            
+      observed_limit_mass_kM << mass << " " << kM << " " << limit*xsec_NLO[counter_masses] << endl;            
       expected_limit_mass_kM << mass << " " << kM << " " << xs_expected[counter_masses] << endl;            
 
-      cout << mass << " " << xs_expected[counter_masses] << endl; 
-
+      //      cout << mass << "  &   " << xs_expected[counter_masses] << "  &   "  <<   xs_observed[counter_masses]  <<  " \\\\ "    << endl; 
+      std::cout << "Mass " << mass <<  " " << xs_expected[counter_masses] << "=" << expected[counter_masses] << "*" <<xsec_NLO[counter_masses] << std::endl; 
 
       counter_masses++;
 
@@ -309,7 +310,7 @@ void get_expected_limit(TString in_dir)
   //gPad->SetLogy();
     graph_observed->SetTitle("");
     graph_observed->SetMarkerStyle(20);
-    graph_observed->SetMarkerSize(1.0);
+    graph_observed->SetMarkerSize(1.8);
     graph_observed->SetMarkerColor(1);
     graph_observed->SetLineColor(1);
     graph_observed->SetLineWidth(3);   
@@ -330,7 +331,7 @@ void get_expected_limit(TString in_dir)
     //graph_expected->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} [TeV]");
     //graph_expetced->GetYaxis()->SetTitle("#frac{#sigma_{95%CL}}{#sigma_{sig}}");    
 
-    //graph_observed->Draw("Apc");  
+    graph_observed->Draw("Apc");  
     graph_expected->GetXaxis()->SetTitleFont(42);
     graph_expected->GetYaxis()->SetTitleFont(42);
     graph_expected->GetXaxis()->SetLabelFont(42);
@@ -384,7 +385,7 @@ void get_expected_limit(TString in_dir)
     leg_example->SetTextFont(42);
     
     leg_example->AddEntry(graph_observed, "observed limit","pl");
-    leg_example->AddEntry(graph_observed, "95% CL limit","pl"); 
+    //leg_example->AddEntry(graph_observed, "95% CL limit","pl"); 
     leg_example->AddEntry(graph_expected, "median expected limit","pl"); 
     leg_example->AddEntry(grshade_68, "68% expected","f");
     leg_example->AddEntry(grshade_95, "95% expected","f");
@@ -405,12 +406,12 @@ void get_expected_limit(TString in_dir)
   
  
     TGraph *graph_observed_total = new TGraph(counter_masses,masses,xs_observed);
-  graph_observed->GetXaxis()->SetRangeUser(mass_min,mass_max);
-  graph_observed->GetYaxis()->SetRangeUser(0.1,1000.);
-  //gPad->SetLogy();
+    graph_observed->GetXaxis()->SetRangeUser(mass_min,mass_max);
+    graph_observed->GetYaxis()->SetRangeUser(0.1,1000.);
+    //gPad->SetLogy();
     graph_observed_total->SetTitle("");
     graph_observed_total->SetMarkerStyle(20);
-    graph_observed_total->SetMarkerSize(0.7);
+    graph_observed_total->SetMarkerSize(1.6);
     graph_observed_total->SetMarkerColor(1);
     graph_observed_total->SetLineColor(1);
     graph_observed_total->SetLineWidth(3);   
@@ -547,7 +548,7 @@ void get_expected_limit(TString in_dir)
     leg_total->SetTextFont(42);
     leg_total->SetTextSize(0.032);    
     
-    //leg_total->AddEntry(graph_observed, "observed limit","pl");
+    leg_total->AddEntry(graph_observed, "observed limit","pl");
     //leg_total->AddEntry(graph_observed, "95% CL limit","pl"); 
     leg_total->AddEntry(graph_expected, "median expected limit","pl"); 
     leg_total->AddEntry(grshade_68, "68% expected","f");
