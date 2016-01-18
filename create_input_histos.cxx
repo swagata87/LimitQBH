@@ -84,8 +84,20 @@ void create_input_histos(int width_signal_region){
   TF1* fit_resolution=new TF1("fit_resolution","[0]+[1]*x+[2]*x*x+[3]*x*x*x",mass_min,mass_max);
   fit_resolution->SetParameter(0,0.013);
   fit_resolution->SetParameter(1,1.5e-05);  
-  fit_resolution->SetParameter(2,-3.8e-09);
-  fit_resolution->SetParameter(3,4.4e-13);   
+  fit_resolution->SetParameter(2,-3.6e-09);
+  fit_resolution->SetParameter(3,4e-13);   
+
+  TF1* fit_resolution_up=new TF1("fit_resolution_up","[0]+[1]*x+[2]*x*x+[3]*x*x*x",mass_min,mass_max);
+  fit_resolution_up->SetParameter(0,0.014);
+  fit_resolution_up->SetParameter(1,1.6e-05);
+  fit_resolution_up->SetParameter(2,-3e-09);
+  fit_resolution_up->SetParameter(3,4.2e-13);
+
+  TF1* fit_resolution_down=new TF1("fit_resolution_down","[0]+[1]*x+[2]*x*x+[3]*x*x*x",mass_min,mass_max);
+  fit_resolution_down->SetParameter(0,0.013);
+  fit_resolution_down->SetParameter(1,1.5e-05);
+  fit_resolution_down->SetParameter(2,-4.1e-09);
+  fit_resolution_down->SetParameter(3,4.7e-13);
 
   
   //
@@ -259,21 +271,35 @@ void create_input_histos(int width_signal_region){
   
   double mass_sig=(double)mass_min;
   double resolution=5.;
+  double resolution_up=5.;
+  double resolution_down=5.;
+
   //double width=1.;
   
   TF1* gauss = new TF1("gauss","TMath::Gaus(x,[0],[1])",mass_sig-8*resolution,mass_sig+8*resolution);
 
   TF1* fit_acceff=new TF1("fit_acceff","[0]+[1]/(x+[2])+[3]*x",200.,6000.);
- 
-  fit_acceff->SetParameter(0,0.8184);
-  fit_acceff->SetParameter(1,-124.6);  
-  fit_acceff->SetParameter(2,100.090490);
+  fit_acceff->SetParameter(0,0.8200);
+  fit_acceff->SetParameter(1,-123.3);  
+  fit_acceff->SetParameter(2,95.9635);
   fit_acceff->SetParameter(3,-0.000024); 
-
   double acceff=0.7;
 
-  double xsec=1.0;
+  TF1* fit_acceff_up=new TF1("fit_acceff_up","[0]+[1]/(x+[2])+[3]*x",200.,6000.);
+  fit_acceff_up->SetParameter(0,0.8652);
+  fit_acceff_up->SetParameter(1,-115.6);
+  fit_acceff_up->SetParameter(2,67.2203);
+  fit_acceff_up->SetParameter(3,-0.000024);
+  double acceff_up=0.7;
 
+  TF1* fit_acceff_down=new TF1("fit_acceff_down","[0]+[1]/(x+[2])+[3]*x",200.,6000.);
+  fit_acceff_down->SetParameter(0,0.7863);
+  fit_acceff_down->SetParameter(1,-140.3);
+  fit_acceff_down->SetParameter(2,142.755507);
+  fit_acceff_down->SetParameter(3,-0.000026);
+  double acceff_down=0.7;
+
+  double xsec=1.0;
   double limit_lower=mass_min;
   double limit_upper=mass_max;  
 
@@ -284,8 +310,8 @@ void create_input_histos(int width_signal_region){
   for(int k=0;k<num_samples;k++)
     {
       TH1D*  signal_temp;
-      TH1D*  signal_temp_massScale_up;  
-      TH1D*  signal_temp_massScale_down;
+      TH1D*  signal_temp_Eff_up;  
+      TH1D*  signal_temp_Eff_down;
       TH1D*  signal_temp_massRes_up;
       TH1D*  signal_temp_massRes_down;
 
@@ -303,8 +329,11 @@ void create_input_histos(int width_signal_region){
       outfile_signal->cd();
 
       resolution=mass_sig*(fit_resolution->Eval(mass_sig));
-      acceff=fit_acceff->Eval(mass_sig);
+      resolution_up=mass_sig*(fit_resolution_up->Eval(mass_sig));
+      resolution_down=mass_sig*(fit_resolution_down->Eval(mass_sig));
 
+      acceff=fit_acceff->Eval(mass_sig);
+      std::cout << "mass_sig=" << mass_sig << " resolution=" << resolution  << "  resolution_up="<< resolution_up  << "  resolution_down="  << resolution_down  <<std::endl;
       limit_lower=mass_sig-width_signal_region*resolution;
       limit_upper=mass_sig+width_signal_region*resolution;
       
@@ -388,27 +417,30 @@ void create_input_histos(int width_signal_region){
 	}
       */
       cout << "signal mass: " << mass_sig << " N events: " << signal_temp->Integral(1,6000) << endl; 
-
-      // Signal mass scale systematic //
-      gauss->SetParameter(0,mass_sig*(1.0+0.02));
+      
+      // Signal eff systematic //
+      acceff_up=fit_acceff_up->Eval(mass_sig);
+      gauss->SetParameter(0,mass_sig);
       gauss->SetParameter(1,resolution);
-      signal_temp_massScale_up=new TH1D("signal_massScale_systUp","",6200,0.,6200.);
-      signal_temp_massScale_up->FillRandom("gauss",10000);
-      signal_temp_massScale_up->Sumw2();
-      signal_temp_massScale_up->Scale((xsec/1000.0)*acceff*lumi_scale/10000.);
-      myfile << "signal syst " << mass_sig << " signal_massScale_systUp " << signal_temp_massScale_up->Integral(1,6000) << "\n";
+      signal_temp_Eff_up=new TH1D("signal_Eff_systUp","",6200,0.,6200.);
+      signal_temp_Eff_up->FillRandom("gauss",10000);
+      signal_temp_Eff_up->Sumw2();
+      signal_temp_Eff_up->Scale((xsec/1000.0)*acceff_up*lumi_scale/10000.);
+      myfile << "signal syst " << mass_sig << " signal_Eff_systUp " << signal_temp_Eff_up->Integral(1,6000) << "\n";
 
-      gauss->SetParameter(0,mass_sig*(1.0-0.02));
+      acceff_down=fit_acceff_down->Eval(mass_sig);
+      gauss->SetParameter(0,mass_sig);
       gauss->SetParameter(1,resolution);
-      signal_temp_massScale_down=new TH1D("signal_massScale_systDown","",6200,0.,6200.);
-      signal_temp_massScale_down->FillRandom("gauss",10000);
-      signal_temp_massScale_down->Sumw2();
-      signal_temp_massScale_down->Scale((xsec/1000.0)*acceff*lumi_scale/10000.);
-      myfile << "signal syst " << mass_sig << " signal_massScale_systDown " << signal_temp_massScale_down->Integral(1,6000) << "\n";
+      signal_temp_Eff_down=new TH1D("signal_Eff_systDown","",6200,0.,6200.);
+      signal_temp_Eff_down->FillRandom("gauss",10000);
+      signal_temp_Eff_down->Sumw2();
+      signal_temp_Eff_down->Scale((xsec/1000.0)*acceff_down*lumi_scale/10000.);
+      myfile << "signal syst " << mass_sig << " signal_Eff_systDown " << signal_temp_Eff_down->Integral(1,6000) << "\n";
+      
 
       // Signal mass resolution systematic //
       gauss->SetParameter(0,mass_sig);
-      gauss->SetParameter(1,resolution*(1.0+0.05));
+      gauss->SetParameter(1,resolution_up);
       signal_temp_massRes_up=new TH1D("signal_massRes_systUp","",6200,0.,6200.);
       signal_temp_massRes_up->FillRandom("gauss",10000);
       signal_temp_massRes_up->Sumw2();
@@ -416,7 +448,7 @@ void create_input_histos(int width_signal_region){
       myfile << "signal syst " << mass_sig << " signal_massRes_systUp " << signal_temp_massRes_up->Integral(1,6000) << "\n";
 
       gauss->SetParameter(0,mass_sig);
-      gauss->SetParameter(1,resolution*(1.0-0.05));
+      gauss->SetParameter(1,resolution_down);
       signal_temp_massRes_down=new TH1D("signal_massRes_systDown","",6200,0.,6200.);
       signal_temp_massRes_down->FillRandom("gauss",10000);
       signal_temp_massRes_down->Sumw2();
@@ -448,16 +480,16 @@ void create_input_histos(int width_signal_region){
       // Write in output file
       outfile_signal->cd();
       signal_temp->Write("signal");
-      signal_temp_massScale_up->Write("signal_massScale_systUp");
-      signal_temp_massScale_down->Write("signal_massScale_systDown");
+      signal_temp_Eff_up->Write("signal_Eff_systUp");
+      signal_temp_Eff_down->Write("signal_Eff_systDown");
       signal_temp_massRes_up->Write("signal_massRes_systUp");
       signal_temp_massRes_down->Write("signal_massRes_systDown");
       
       hist_pdf_thisSig_Up->Write();
       hist_pdf_thisSig_Down->Write();
       myfile_temp << "signal " << mass_sig << " " << signal_temp->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_massScale_systUp " << signal_temp_massScale_up->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << mass_sig << " signal_massScale_systDown " << signal_temp_massScale_down->Integral(1,6000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_Eff_systUp " << signal_temp_Eff_up->Integral(1,6000) << "\n";
+      myfile_temp << "signal syst " << mass_sig << " signal_Eff_systDown " << signal_temp_Eff_down->Integral(1,6000) << "\n";
       myfile_temp << "signal syst " << mass_sig << " signal_massRes_systUp " << signal_temp_massRes_up->Integral(1,6000) << "\n";
       myfile_temp << "signal syst " << mass_sig << " signal_massRes_systDown " << signal_temp_massRes_down->Integral(1,6000) << "\n";
       myfile_temp << "signal syst " << mass_sig << " signal_pdf_systUp " << hist_pdf_thisSig_Up->Integral(1,6000) << "\n";
