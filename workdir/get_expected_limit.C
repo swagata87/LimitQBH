@@ -19,7 +19,7 @@
 #include "TSpline.h"
 #include <algorithm>
 #include "TGraphAsymmErrors.h"
-#include "/user/mukherjee/limits_LFV/scripts/Environment.h"
+#include "/user/mukherjee/limits_QBH/scripts/Environment.h"
 #include "TLatex.h"
 
 using namespace std;
@@ -33,22 +33,22 @@ void get_expected_limit(TString in_dir)
   Char_t file_title_2[200];
   Char_t file_title_3[200];
 
-  int mass_min=200;
-  int mass_inter_0=1000;  
-  int mass_inter_1=1600;
+  int mass_min=500;
+  int mass_inter_0=1500;  
+  int mass_inter_1=2500;
   //  int mass_inter_2=2800;  
   //  int mass_inter_3=3400;
-  int mass_max=4000;
+  int mass_max=5000;
 
-  int binning_0=100;
-  int binning_1=200;
-  int binning_2=200;
+  int binning_0=500;
+  int binning_1=1000;
+  int binning_2=500;
   // int binning_3=600;  
   //int binning_4=0;  
 
   int mass=mass_min;
 
-  TFile* outfile=new TFile("outfile_RPV_limits.root","recreate");
+  TFile* outfile=new TFile("outfile_QBH_limits.root","recreate");
 
   ofstream median;
   median.open ("median.txt");
@@ -121,9 +121,9 @@ void get_expected_limit(TString in_dir)
 
   while(mass<=mass_max)
     {    
-      sprintf(file_title_2,"LQD_001_LLE_001_MSnl_scale_down_%d",(int)mass);
+      sprintf(file_title_2,"dim_4_mass%d_QBH",(int)mass);
       get_environment(file_title_2);
-      xsec_NLO_2[counter_masses]=BGcrosssection*BGweight;
+      xsec_NLO_2[counter_masses]=BGcrosssection;//*BGweight;
       //   std::cout << "Read xs for 0.01 coupling for mass " << mass << std::endl;
       counter_masses++;
 
@@ -145,9 +145,9 @@ void get_expected_limit(TString in_dir)
 
   while(mass<=mass_max)
     {
-      sprintf(file_title_3,"LQD_02_LLE_02_MSnl_scale_down_%d",(int)mass);
+      sprintf(file_title_3,"dim_6_mass%d_QBH",(int)mass);
       get_environment(file_title_3);
-      xsec_NLO_3[counter_masses]=BGcrosssection*BGweight;
+      xsec_NLO_3[counter_masses]=BGcrosssection; //*BGweight;
       //   std::cout << "Read xs for 0.01 coupling for mass " << mass << std::endl;                                                                                            
       counter_masses++;
 
@@ -171,17 +171,17 @@ void get_expected_limit(TString in_dir)
     {
       
       masses[counter_masses]=mass;
-      sprintf(file_title,"LQD_01_LLE_01_MSnl_scale_down_%d",(int)mass);
+      sprintf(file_title,"dim_1_mass%d_QBH",(int)mass);
       get_environment(file_title);
       //xsec[counter_masses]=BGcrosssection*1000.*BGweight;
-      xsec_NLO[counter_masses]=BGcrosssection*BGweight;
+      xsec_NLO[counter_masses]=BGcrosssection;//*BGweight;
       //std::cout<< "Read xs for 0.1 coupling for mass " << mass << std::endl;
 
       //this is in fb , 0.4 is BR, 0.1 is coupling
       kM=(BGcrosssection/0.4)*1./pow(0.1,2);
       
       sprintf(mass_dir,"/output_masses/Mass_%i_output",mass);   
-      TString basedir="/user/mukherjee/limits_LFV/scripts/";
+      TString basedir="/user/mukherjee/limits_QBH/scripts/";
       TString *massdir=new TString(mass_dir);
       TString filename=basedir+in_dir+*massdir+"/condor/expected.root";
       TString filename_observed = basedir+in_dir+*massdir+"/condor/observed.root";
@@ -224,20 +224,20 @@ void get_expected_limit(TString in_dir)
 
       
       TTree *tree_observed = (TTree*)observed_file->Get("limit");
-
+      
       tree_observed->ResetBranchAddresses();
       tree_observed->SetBranchAddress("limit",&limit);      
       
       nrEntries = tree_observed->GetEntries();
       for(int entryNr=0;entryNr<nrEntries;entryNr++){
-	tree_observed->GetEntry(entryNr);
-	observed_limit << limit << endl;
+      	tree_observed->GetEntry(entryNr);
+      	observed_limit << limit << endl;
       }
       
       observed[counter_masses]=limit;
       
-      //  cout << "Mass: " << mass << " observed limit: " << limit ;
-
+      cout << "Mass: " << mass << " observed limit: " << limit ;
+      
       xs_expected[counter_masses]=expected[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
       xs_observed[counter_masses]=observed[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
       xs_expected_68_up[counter_masses]=expected_68_up[counter_masses]*xsec_NLO[counter_masses];
@@ -251,7 +251,7 @@ void get_expected_limit(TString in_dir)
       observed_limit_mass_kM << mass << " " << kM << " " << limit*xsec_NLO[counter_masses] << endl;            
       expected_limit_mass_kM << mass << " " << kM << " " << xs_expected[counter_masses] << endl;            
 
-      //      cout << mass << "  &   " << xs_expected[counter_masses] << "  &   "  <<   xs_observed[counter_masses]  <<  " \\\\ "    << endl; 
+      cout << mass << "  &   " << xs_expected[counter_masses] << "  &   "  <<   xs_observed[counter_masses]  <<  " \\\\ "    << endl; 
       std::cout << "Mass " << mass <<  " " << xs_expected[counter_masses] << "=" << expected[counter_masses] << "*" <<xsec_NLO[counter_masses] << std::endl; 
 
       counter_masses++;
@@ -303,7 +303,7 @@ void get_expected_limit(TString in_dir)
   ratio->cd();
   ratio->SetLogy();
   
- 
+  
   TGraph *graph_observed = new TGraph(counter_masses,masses,observed);
   graph_observed->GetXaxis()->SetRangeUser(mass_min,mass_max);
   graph_observed->GetYaxis()->SetRangeUser(0.1,10);
@@ -320,10 +320,10 @@ void get_expected_limit(TString in_dir)
 
   TGraph *graph_expected = new TGraph(counter_masses,masses,expected);
   graph_expected->GetXaxis()->SetRangeUser(mass_min,mass_max);
-    graph_expected->GetYaxis()->SetRangeUser(0.1,10);
+    graph_expected->GetYaxis()->SetRangeUser(0.0001,1000);
     //gPad->SetLogy();
     graph_expected->SetTitle("");
-    graph_expected->SetMarkerStyle(0);
+    graph_expected->SetMarkerStyle(20);
     graph_expected->SetMarkerColor(kBlack);
     graph_expected->SetLineColor(kBlack);
     graph_expected->SetLineWidth(2);
@@ -336,10 +336,10 @@ void get_expected_limit(TString in_dir)
     graph_expected->GetYaxis()->SetTitleFont(42);
     graph_expected->GetXaxis()->SetLabelFont(42);
     graph_expected->GetYaxis()->SetLabelFont(42);    
-    graph_expected->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} (GeV)");
+    graph_expected->GetXaxis()->SetTitle("M_{QBH} (GeV)");
     graph_expected->GetYaxis()->SetTitle("#frac{#sigma_{95% CL}}{#sigma_{signal}}");
     graph_expected->GetXaxis()->SetRangeUser(mass_min,mass_max);
-    graph_expected->GetYaxis()->SetRangeUser(0.1,50.);
+    graph_expected->GetYaxis()->SetRangeUser(0.0001,50.);
     graph_expected->Draw("Apl");   
 
     
@@ -385,7 +385,7 @@ void get_expected_limit(TString in_dir)
     leg_example->SetTextFont(42);
     
     leg_example->AddEntry(graph_observed, "observed limit","pl");
-    //leg_example->AddEntry(graph_observed, "95% CL limit","pl"); 
+    //   leg_example->AddEntry(graph_observed, "95% CL limit","pl"); 
     leg_example->AddEntry(graph_expected, "median expected limit","pl"); 
     leg_example->AddEntry(grshade_68, "68% expected","f");
     leg_example->AddEntry(grshade_95, "95% expected","f");
@@ -404,7 +404,7 @@ void get_expected_limit(TString in_dir)
 
     total->SetLogy();
   
- 
+    
     TGraph *graph_observed_total = new TGraph(counter_masses,masses,xs_observed);
     graph_observed->GetXaxis()->SetRangeUser(mass_min,mass_max);
     graph_observed->GetYaxis()->SetRangeUser(0.1,1000.);
@@ -417,14 +417,14 @@ void get_expected_limit(TString in_dir)
     graph_observed_total->SetLineWidth(3);   
     graph_observed->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} (GeV)");
     graph_observed->GetYaxis()->SetTitle("#frac{#sigma_{95%CL}}{#sigma_{sig}#timesBR}");    
-  
+    
 
   TGraph *graph_expected_total = new TGraph(counter_masses,masses,xs_expected);
   graph_expected_total->GetXaxis()->SetRangeUser(mass_min,mass_max);
-  graph_expected_total->GetYaxis()->SetRangeUser(0.1,1000000.);
+  graph_expected_total->GetYaxis()->SetRangeUser(0.0001,1000.);
     //gPad->SetLogy();
     graph_expected_total->SetTitle("");
-    graph_expected_total->SetMarkerStyle(0);
+    graph_expected_total->SetMarkerStyle(20);
     graph_expected_total->SetMarkerColor(kBlack);
     graph_expected_total->SetLineColor(kBlack);
     graph_expected_total->SetLineWidth(2);
@@ -437,10 +437,10 @@ void get_expected_limit(TString in_dir)
     graph_expected_total->GetYaxis()->SetTitleFont(42);
     graph_expected_total->GetXaxis()->SetLabelFont(42);
     graph_expected_total->GetYaxis()->SetLabelFont(42);    
-    graph_expected_total->GetXaxis()->SetTitle("M_{#tilde{#nu}_{#tau}} (GeV)");
-    graph_expected_total->GetYaxis()->SetTitle("#sigma^{prod}_{#tilde{#nu}} #times BR ( #tilde{#nu} #rightarrow e#mu ) (fb)");
+    graph_expected_total->GetXaxis()->SetTitle("M_{QBH} (GeV)");
+    graph_expected_total->GetYaxis()->SetTitle("#sigma^{prod}_{QBH} #times BR ( QBH #rightarrow e#mu ) (pb)");
     graph_expected_total->GetXaxis()->SetRangeUser(mass_min,mass_max);
-    graph_expected_total->GetYaxis()->SetRangeUser(0.1,1000000.);
+    graph_expected_total->GetYaxis()->SetRangeUser(0.0001,1000.);
     graph_expected_total->Draw("Apl");   
 
     
@@ -484,8 +484,8 @@ void get_expected_limit(TString in_dir)
     graph_xsec->SetMarkerColor(kBlue);
     graph_xsec->SetLineColor(kBlue);
     graph_xsec->SetLineWidth(2);    
-    graph_xsec->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} [TeV]");
-    graph_xsec->GetYaxis()->SetTitle("95%CL #sigma_{sig}xBR / fb");   
+    graph_xsec->GetXaxis()->SetTitle("M_{QBH} [TeV]");
+    graph_xsec->GetYaxis()->SetTitle("95%CL #sigma_{sig}xBR / pb");   
     graph_xsec->Draw("pl,same");
     //g_xsec_scale_up->Draw("l,same");
     //g_xsec_scale_down->Draw("l,same");    
@@ -504,8 +504,8 @@ void get_expected_limit(TString in_dir)
     graph_xsec_2->SetMarkerColor(kRed+2);
     graph_xsec_2->SetLineColor(kRed+2);
     graph_xsec_2->SetLineWidth(2);    
-    graph_xsec_2->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} [TeV]");
-    graph_xsec_2->GetYaxis()->SetTitle("95%CL #sigma_{sig}xBR / fb");   
+    graph_xsec_2->GetXaxis()->SetTitle("M_{QBH} [TeV]");
+    graph_xsec_2->GetYaxis()->SetTitle("95%CL #sigma_{sig}xBR / pb");   
     graph_xsec_2->Draw("pl,same");
     //g_xsec_scale_up->Draw("l,same");
     //g_xsec_scale_down->Draw("l,same");    
@@ -521,8 +521,8 @@ void get_expected_limit(TString in_dir)
     graph_xsec_3->SetMarkerColor(kPink+1);
     graph_xsec_3->SetLineColor(kPink+1);
     graph_xsec_3->SetLineWidth(2);
-    graph_xsec_3->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} [TeV]");
-    graph_xsec_3->GetYaxis()->SetTitle("95%CL #sigma_{sig}xBR / fb");
+    graph_xsec_3->GetXaxis()->SetTitle("M_{QBH} [TeV]");
+    graph_xsec_3->GetYaxis()->SetTitle("95%CL #sigma_{sig}xBR / pb");
     graph_xsec_3->Draw("pl,same");
     //g_xsec_scale_up->Draw("l,same");     
     //g_xsec_scale_down->Draw("l,same");                                                                                                                                     
@@ -549,15 +549,15 @@ void get_expected_limit(TString in_dir)
     leg_total->SetTextSize(0.032);    
     
     leg_total->AddEntry(graph_observed, "observed limit","pl");
-    //leg_total->AddEntry(graph_observed, "95% CL limit","pl"); 
+    //   leg_total->AddEntry(graph_observed, "95% CL limit","pl"); 
     leg_total->AddEntry(graph_expected, "median expected limit","pl"); 
     leg_total->AddEntry(grshade_68, "68% expected","f");
     leg_total->AddEntry(grshade_95, "95% expected","f");
     //leg_total->AddEntry(graph_xsec, "#splitline{RPV signal (NLO)}{#lambda^{I}_{311}=#lambda_{132}=0.01}","l");
-    leg_total->AddEntry(graph_xsec, "RPV signal (NLO)","");
-    leg_total->AddEntry(graph_xsec_2, "#lambda^{I}_{311}=#lambda_{312}=#lambda_{321}=0.01","l");
-    leg_total->AddEntry(graph_xsec, "#lambda^{I}_{311}=#lambda_{312}=#lambda_{321}=0.1","l");
-    leg_total->AddEntry(graph_xsec_3, "#lambda^{I}_{311}=#lambda_{312}=#lambda_{321}=0.2","l");
+    leg_total->AddEntry(graph_xsec, "QBH signal","");
+    leg_total->AddEntry(graph_xsec_2, "dim 4","l");
+    leg_total->AddEntry(graph_xsec, "dim 1","l");
+    leg_total->AddEntry(graph_xsec_3, "dim 6","l");
 
     //leg_total->AddEntry(fit_xsec_Zprime,"Z'/a' (LO)","l"); 
     //leg_total->AddEntry(borderline," ","");

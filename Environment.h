@@ -30,7 +30,7 @@ void get_environment(TString background) {
 
   TEnv *xs = new TEnv("INPUT");
 
-  TString *base = new TString("/user/mukherjee/limits_LFV/scripts/xs.cfg");
+  TString *base = new TString("/user/mukherjee/limits_QBH/scripts/xs.cfg");
   //TString *base = new TString("/home/home1/institut_3a/gueth/ANALYSIS_skimmer_v104/macro/SirPlotAlot_thomas/SirPlotAlot/xs.cfg");
 
   const char* ret;
@@ -51,7 +51,7 @@ void get_environment(TString background) {
   }  
   */
 
-  xs->ReadFile("/user/mukherjee/limits_LFV/scripts/xs.cfg", kEnvChange); 
+  xs->ReadFile("/user/mukherjee/limits_QBH/scripts/xs.cfg", kEnvChange); 
   //xs->ReadFile("/home/home1/institut_3a/gueth/ANALYSIS_skimmer_v104/macro/SirPlotAlot_thomas/SirPlotAlot/xs.cfg", kEnvChange);
 
   lumi_scale = xs->GetValue("lumi", -1.);
@@ -59,11 +59,11 @@ void get_environment(TString background) {
 
   //  BGnumberofevents = xs->GetValue(background+".Nev", -1.);
   BGcrosssection   = xs->GetValue(background+".xs", -1.);
-  BGweight         = xs->GetValue(background+".weight", -1.);    
+  //BGweight         = xs->GetValue(background+".weight", -1.);    
 
 
   // if (BGnumberofevents<0 || BGcrosssection<0 || BGweight<0)
-  if (BGcrosssection<0 || BGweight<0)                                                                                         
+  if (BGcrosssection<0) // || BGweight<0)                                                                                         
     {errormsg(background);}
 
   delete base;

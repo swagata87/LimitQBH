@@ -51,19 +51,19 @@ fi
       touch $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
       touch $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
 
-      echo "cd /user/mukherjee/limits_LFV/scripts/$1/output_masses/Mass_${mass}_output/" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
-      echo "cd /user/mukherjee/limits_LFV/scripts/$1/output_masses/Mass_${mass}_output/" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
+      echo "cd /user/mukherjee/limits_QBH/scripts/$1/output_masses/Mass_${mass}_output/" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
+      echo "cd /user/mukherjee/limits_QBH/scripts/$1/output_masses/Mass_${mass}_output/" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
 
-      ##echo "combine -M MarkovChainMC -H ProfileLikelihood EmuSpectrum_datacard.txt --tries ${n_tries_observed} -s -1  -m 50 -n observed > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
+      echo "combine -M MarkovChainMC -H ProfileLikelihood EmuSpectrum_datacard.txt --tries ${n_tries_observed} -s -1  -m 50 -n observed > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
 
-     echo "combine -M MarkovChainMC  EmuSpectrum_datacard.txt --tries ${n_tries_observed} -s -1 --rMax 23.5  -m 50 -n observed > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
+##     echo "combine -M MarkovChainMC  EmuSpectrum_datacard.txt --tries ${n_tries_observed} -s -1 --rMax 23.5  -m 50 -n observed > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_observed.sh
 
 
       Nfiles=0
       while [ $Nfiles -le ${n_toys_files} ]
       do
-      ##echo "combine -M MarkovChainMC -H ProfileLikelihood EmuSpectrum_datacard.txt --tries ${n_tries_expected} -t ${n_toys_single} -s -1  > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
-      echo "combine -M MarkovChainMC  EmuSpectrum_datacard.txt --tries ${n_tries_expected} -t ${n_toys_single} -s -1 --rMax 23.5 > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
+      echo "combine -M MarkovChainMC -H ProfileLikelihood EmuSpectrum_datacard.txt --tries ${n_tries_expected} -t ${n_toys_single} -s -1  > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
+##      echo "combine -M MarkovChainMC  EmuSpectrum_datacard.txt --tries ${n_tries_expected} -t ${n_toys_single} -s -1 --rMax 23.5 > /dev/null" >> $1/output_masses/Mass_${mass}_output/run_limit_Mass_${mass}_expected.sh
 	let Nfiles=$Nfiles+1
       done
 
@@ -88,8 +88,8 @@ fi
       sed -e s/@TRY@/${n_tries_expected}/g -e s/@TOY@/${n_toys_single}/g -e s/@DIR@/${1}/g -e s/@MASS@/${mass}/g run_limit_condor_template.cfg >> $1/output_masses/Mass_${mass}_output/condor/run_limit_condor_Mass_${mass}.cfg
       sed -e s/@TRY@/${n_tries_observed}/g -e s/@DIR@/${1}/g -e s/@MASS@/${mass}/g run_limit_condor_template_observed.cfg >> $1/output_masses/Mass_${mass}_output/condor/run_limit_condor_Mass_${mass}_observed.cfg
 
-      echo "cd /user/mukherjee/limits_LFV/scripts/$1/output_masses/Mass_${mass}_output/condor" >> $1/output_masses/Mass_${mass}_output/condor/run_limit_condor_Mass_${mass}_expected.sh
-      echo "cd /user/mukherjee/limits_LFV/scripts/$1/output_masses/Mass_${mass}_output/condor" >> $1/output_masses/Mass_${mass}_output/condor/run_limit_condor_Mass_${mass}_observed.sh
+      echo "cd /user/mukherjee/limits_QBH/scripts/$1/output_masses/Mass_${mass}_output/condor" >> $1/output_masses/Mass_${mass}_output/condor/run_limit_condor_Mass_${mass}_expected.sh
+      echo "cd /user/mukherjee/limits_QBH/scripts/$1/output_masses/Mass_${mass}_output/condor" >> $1/output_masses/Mass_${mass}_output/condor/run_limit_condor_Mass_${mass}_observed.sh
       Nfiles=0
       while [ $Nfiles -le ${n_toys_files} ]
       do

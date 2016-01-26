@@ -17,14 +17,13 @@ process                         0       1       2       3               4       
 --------------------------------
 rate @rates@
 --------------------------------
-lumi			 lnN	1.046	1.046	1.046	1.046	        1.046	1.046	1.046	1.046   1.046
-xsec			 lnN	-	1.05	1.04	1.05	        1.05	1.05	1.05	1.50    1.05
-##fakerate               lnN    -       -       -       -               -       -       -       1.50    - 	
-Ele_syst_Scale		 shape	-	1.	1.	1.	        1.	1.	1.	1	1
-Muon_syst_Scale		 shape	-	1.	1.	1.	        1.	1.	1.	1	1
-Muon_syst_Resolution	 shape	-	1.	1.	1.	        1.	1.	1.	1       1
-pileup_syst_             shape  -       1.      1.      1.              1.      1.      1.      1       1
-eleID_syst_              shape  -       1.      1.      1.              1.      1.      1.      1       1
-muoID_syst_              shape  -       1.      1.      1.              1.      1.      1.      1       1 
-pdf_syst                 shape  1.      1.      1.      1.              1.      1.      1.      1       1 
-massScale_syst           shape  1.      -       -       -               -       -       -       -       -   
+lumi			 lnN	1.046	1.046	1.046	1.046	        1.046	1.046	1.046	1.046   -
+xsec			 lnN	1.05	1.05	1.04	1.05	        1.05	1.05	1.05	1.50    -
+fakerate                 lnN    -       -       -       -               -       -       -       -       1.50 	
+Ele_syst_Scale		 shape	1.	1.	1.	1.	        1.	1.	1.	1	-
+Muon_syst_Scale		 shape	1.	1.	1.	1.	        1.	1.	1.	1	-
+Muon_syst_Resolution	 shape	1.	1.	1.	1.	        1.	1.	1.	1       -
+pileup_syst_             shape  1.      1.      1.      1.              1.      1.      1.      1       -
+eleID_syst_              shape  1.      1.      1.      1.              1.      1.      1.      1       -
+muoID_syst_              shape  1.      1.      1.      1.              1.      1.      1.      1       - 
+pdf_syst                 shape  -       1.      1.      1.              1.      1.      1.      1       - 
