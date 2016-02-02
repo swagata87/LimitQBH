@@ -236,7 +236,7 @@ void get_expected_limit(TString in_dir)
       
       observed[counter_masses]=limit;
       
-      cout << "Mass: " << mass << " observed limit: " << limit ;
+      //      cout << "Mass: " << mass << " observed limit: " << limit ;
       
       xs_expected[counter_masses]=expected[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
       xs_observed[counter_masses]=observed[counter_masses]*xsec_NLO[counter_masses]; ///Aeff[counter_masses];
@@ -252,7 +252,7 @@ void get_expected_limit(TString in_dir)
       expected_limit_mass_kM << mass << " " << kM << " " << xs_expected[counter_masses] << endl;            
 
       cout << mass << "  &   " << xs_expected[counter_masses] << "  &   "  <<   xs_observed[counter_masses]  <<  " \\\\ "    << endl; 
-      std::cout << "Mass " << mass <<  " " << xs_expected[counter_masses] << "=" << expected[counter_masses] << "*" <<xsec_NLO[counter_masses] << std::endl; 
+      //std::cout << "Mass " << mass <<  " " << xs_expected[counter_masses] << "=" << expected[counter_masses] << "*" <<xsec_NLO[counter_masses] << std::endl; 
 
       counter_masses++;
 
@@ -331,7 +331,7 @@ void get_expected_limit(TString in_dir)
     //graph_expected->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} [TeV]");
     //graph_expetced->GetYaxis()->SetTitle("#frac{#sigma_{95%CL}}{#sigma_{sig}}");    
 
-    graph_observed->Draw("Apc");  
+    graph_observed->Draw("Apl");  
     graph_expected->GetXaxis()->SetTitleFont(42);
     graph_expected->GetYaxis()->SetTitleFont(42);
     graph_expected->GetXaxis()->SetLabelFont(42);
@@ -432,7 +432,7 @@ void get_expected_limit(TString in_dir)
     //graph_expected->GetXaxis()->SetTitle("M_{#tilde{#nu_{#tau}}} [TeV]");
     //graph_expetced->GetYaxis()->SetTitle("#frac{#sigma_{95%CL}}{#sigma_{sig}}");    
 
-    graph_observed->Draw("Apc");  
+    graph_observed->Draw("Apl");  
     graph_expected_total->GetXaxis()->SetTitleFont(42);
     graph_expected_total->GetYaxis()->SetTitleFont(42);
     graph_expected_total->GetXaxis()->SetLabelFont(42);

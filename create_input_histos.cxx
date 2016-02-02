@@ -82,17 +82,20 @@ void create_input_histos(int width_signal_region){
   //
   //  PDF Systematics
   //
-  TString pdffilename = "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Nov_24/for_limit.root";
+  TString pdffilename = "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Jan_04/for_limit.root";
   TFile* pdffile = new TFile(pdffilename);
   std::cout << "File for PDF uncert : " << pdffilename << std::endl;
   TH1D* hist_pdf_mean=(TH1D*)pdffile->Get("PDF4LHC15_nnlo_mc_mean");
   TH1D* hist_pdf_up=(TH1D*)pdffile->Get("PDF4LHC15_nnlo_mc_up");
   TH1D* hist_pdf_down=(TH1D*)pdffile->Get("PDF4LHC15_nnlo_mc_down");
 
-  TH1D* hist_pdf_rel_up = new TH1D("reluppdf", "pdfuprel", 6200, 0, 6200);   //  = ((*hist_pdf_up)/(*hist_pdf_mean));
-  TH1D* hist_pdf_rel_down = new TH1D("reldownpdf", "pdfdownrel", 6200, 0, 6200);//= ((*hist_pdf_down)/(*hist_pdf_mean));
+  std::cout << "Nbin pdf bkg = " << hist_pdf_up->GetXaxis()->GetNbins() << std::endl;
 
-  for (int i=1; i<6201; i++) {
+
+  TH1D* hist_pdf_rel_up = new TH1D("reluppdf", "pdfuprel", 6000, 0, 6000);   //  = ((*hist_pdf_up)/(*hist_pdf_mean));
+  TH1D* hist_pdf_rel_down = new TH1D("reldownpdf", "pdfdownrel", 6000, 0, 6000);//= ((*hist_pdf_down)/(*hist_pdf_mean));
+
+  for (int i=1; i<6000; i++) {
     double up=hist_pdf_up->GetBinContent(i);
     double down=hist_pdf_down->GetBinContent(i);
     double mean=hist_pdf_mean->GetBinContent(i);
@@ -246,19 +249,18 @@ void create_input_histos(int width_signal_region){
   
   TFile* infile_sig;
   TString rootfilenames_sig[] = {
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-500_n1_RS-QBH_13TeV_P8-skimid3601.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-1000_n1_RS-QBH_13TeV_P8-skimid3609.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-1500_n1_RS-QBH_13TeV_P8-skimid3607.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-2500_n1_RS-QBH_13TeV_P8-skimid3613.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-3000_n1_RS-QBH_13TeV_P8-skimid3600.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-3500_n1_RS-QBH_13TeV_P8-skimid3646.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-4000_n1_RS-QBH_13TeV_P8-skimid3597.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-4500_n1_RS-QBH_13TeV_P8-skimid3643.root",
-    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-5000_n1_RS-QBH_13TeV_P8-skimid3594.root",
-    //    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/QBH/QBHToEMu_M-6500_n1_RS-QBH_13TeV_P8-skimid3610.root"
-  };
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-500_n1_RS-QBH_13TeV_P8-skimid3601.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-1000_n1_RS-QBH_13TeV_P8-skimid3609.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-1500_n1_RS-QBH_13TeV_P8-skimid3607.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-2500_n1_RS-QBH_13TeV_P8-skimid3613.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-3000_n1_RS-QBH_13TeV_P8-skimid3600.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-3500_n1_RS-QBH_13TeV_P8-skimid3646.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-4000_n1_RS-QBH_13TeV_P8-skimid3597.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-4500_n1_RS-QBH_13TeV_P8-skimid3643.root",
+    "/net/scratch_cms/institut_3a/erdweg/public/13TeV_rpv/Feb_02/QBHToEMu_M-5000_n1_RS-QBH_13TeV_P8-skimid3594.root",
+   };
 
-  std::string sample_names_sig[] = {"500", "1000", "1500", "2500", "3000", "3500", "4000", "4500", "5000"};
+  std::string sample_names_sig[] = {"500" , "1000", "1500", "2500", "3000", "3500", "4000", "4500", "5000"};
   const int arraySize_sig = sizeof(sample_names_sig)/sizeof(sample_names_sig[0]);
 
   TString syst_names_sig[] ={"pileup_syst_","eleID_syst_","Ele_syst_Scale","Muon_syst_Scale","Muon_syst_Resolution","muoID_syst_"};
@@ -271,13 +273,14 @@ void create_input_histos(int width_signal_region){
   fit_acceff->SetParameter(2,212.174487);
   fit_acceff->SetParameter(3,-0.000022);
   double acceff=0.7;
-
-  for(int mass_sig=200;mass_sig<6000;mass_sig+=200) {
+  /*
+  for(int mass_sig=500;mass_sig<5000;mass_sig+=500) {
     acceff=fit_acceff->Eval(mass_sig);
-    std::cout << "mass_sig=" << mass_sig << " acceff=" << acceff << std::endl;
+    std::cout <<  mass_sig << "&   " <<     acceff << " \\\\" << std::endl;
+
 
   }
-
+  */
 
 
   std::cout << "No- of systematics " << arraySize_systs_sig << "  No. of signal MC samples " << arraySize_sig << std::endl;
@@ -321,22 +324,26 @@ void create_input_histos(int width_signal_region){
   }
 
   signal_temp=(TH1D*)infile_sig->Get("emu/Stage_0/h1_0_emu_Mass");
+  std::cout << "Nbin = " << signal_temp->GetXaxis()->GetNbins() << std::endl;
   signal_temp->Scale(Lumi_bkg);
   myfile << "signal " << sample_names_sig[k] << " " << signal_temp->Integral(1,6000) << "\n";
   cout << "signal mass: " << sample_names_sig[k] << " N events: " << signal_temp->Integral(1,6000) << endl;
   outfile_signal->cd();
-  signal_temp->Write("signal");
   myfile_temp << "signal " << sample_names_sig[k] << " " << signal_temp->Integral(1,6000) << "\n";
 
-  //  TH1D* hist_pdf_mean_sig=(TH1D*)infile_sig->Get("PDF4LHC15_nnlo_100_mean");
-  //  TH1D* hist_pdf_up_sig=(TH1D*)infile_sig->Get("PDF4LHC15_nnlo_100_up");
-  // TH1D* hist_pdf_down_sig=(TH1D*)infile_sig->Get("PDF4LHC15_nnlo_100_down");
+  TH1D* hist_pdf_mean_sig=(TH1D*)infile_sig->Get("PDF4LHC15_nnlo_mc_mean");
+  TH1D* hist_pdf_up_sig=(TH1D*)infile_sig->Get("PDF4LHC15_nnlo_mc_up");
+  TH1D* hist_pdf_down_sig=(TH1D*)infile_sig->Get("PDF4LHC15_nnlo_mc_down");
 
-  // TH1D* hist_pdf_rel_up_sig = new TH1D("reluppdf", "pdfuprel", 6200, 0, 6200);
-  // TH1D* hist_pdf_rel_down_sig = new TH1D("reldownpdf", "pdfdownrel", 6200, 0, 6200);
+  //  std::cout << "Nbin1 = " << hist_pdf_up_sig->GetXaxis()->GetNbins() << std::endl;
+  // std::cout << "Nbin2 = " << hist_pdf_down_sig->GetXaxis()->GetNbins() << std::endl;
 
-  /*
-  for (int i=1; i<6201; i++) {
+
+  TH1D* hist_pdf_rel_up_sig = new TH1D("reluppdf", "pdfuprel", 6000, 0, 6000);
+  TH1D* hist_pdf_rel_down_sig = new TH1D("reldownpdf", "pdfdownrel", 6000, 0, 6000);
+
+  
+  for (int i=1; i<6000; i++) {
     double up=hist_pdf_up_sig->GetBinContent(i);
     double down=hist_pdf_down_sig->GetBinContent(i);
     double mean=hist_pdf_mean_sig->GetBinContent(i);
@@ -344,20 +351,23 @@ void create_input_histos(int width_signal_region){
     double rel_down = 0;
     if (mean!=0.0) rel_up =   up/mean;
     if (mean!=0.0) rel_down = down/mean;
-    if (i<100) std::cout << "SIGNAL bin " << i  << "  mean " << mean << " up " << up << " down " << down << std::endl;
+    //if (i<100) std::cout << "SIGNAL bin " << i  << "  mean " << mean << " up " << up << " down " << down << std::endl;
     hist_pdf_rel_up_sig->SetBinContent(i,rel_up);
     hist_pdf_rel_down_sig->SetBinContent(i,rel_down);
+  
   }
 
-  TH1D* hist_pdf_thisSig_Up = new TH1D("SigPDFUP", "SigPDFUP", 6200, 0, 6200); //  = hist_pdf_rel_up *(*signal_temp);                                                                          
-  TH1D* hist_pdf_thisSig_Down  = new TH1D("SigPDFDOWN", "SigPDFDOWN", 6200, 0, 6200); //= hist_pdf_rel_down *(*signal_temp);                                                                   
-  for (int ii=1; ii<6201; ii++) {
+  TH1D* hist_pdf_thisSig_Up = new TH1D("SigPDFUP", "SigPDFUP", 6000, 0, 6000); //  = hist_pdf_rel_up *(*signal_temp);                                                                          
+  TH1D* hist_pdf_thisSig_Down  = new TH1D("SigPDFDOWN", "SigPDFDOWN", 6000, 0, 6000); //= hist_pdf_rel_down *(*signal_temp);                                                                   
+ 
+  for (int ii=1; ii<6000; ii++) {
     double mySig_up=hist_pdf_rel_up_sig->GetBinContent(ii);
     double mySig_down=hist_pdf_rel_down_sig->GetBinContent(ii);
     double mySig_mean=signal_temp->GetBinContent(ii);
     double sig_mul_up = mySig_up*mySig_mean;
     double sig_mul_down = mySig_down*mySig_mean;
-    if (ii<100) std::cout << "bin " << ii << " nSig " << mySig_mean << " relUp " << mySig_up <<  " pdf_up " << sig_mul_up << " relDown " << mySig_down <<  " pdf_down " << sig_mul_down   << std::endl;
+    //if (ii<100) 
+    //std::cout << "bin " << ii << " :  " << mySig_up << "*" << mySig_mean << "=" << sig_mul_up << std::endl; 
     hist_pdf_thisSig_Up->SetBinContent(ii,sig_mul_up);
     hist_pdf_thisSig_Down->SetBinContent(ii,sig_mul_down);
   }
@@ -370,10 +380,11 @@ void create_input_histos(int width_signal_region){
   myfile << "signal syst " << sample_names_sig[k] << " signal_pdf_systDown " <<  hist_pdf_thisSig_Down->Integral(1,6000) << "\n";
   myfile_temp << "signal syst " << sample_names_sig[k] << " signal_pdf_systDown " <<  hist_pdf_thisSig_Down->Integral(1,6000) << "\n";
 
+  signal_temp->Write("signal");
   hist_pdf_thisSig_Up->Write();
   hist_pdf_thisSig_Down->Write();
 
-  */
+  
 
   // Systematics
   //if (debug) 
@@ -390,13 +401,13 @@ void create_input_histos(int width_signal_region){
       sig_hist_syst_down->Scale(Lumi_bkg);
       sig_hist_syst_up->SetName("signal_"+syst_names_sig[kk]+"Up");
       sig_hist_syst_up->Write();
-      myfile << "signal syst " << sample_names_sig[k] << " " << syst_names_sig[kk]+"Up" << " " << sig_hist_syst_up->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << sample_names_sig[k] << " " << syst_names_sig[kk]+"Up" << " " << sig_hist_syst_up->Integral(1,6000) << "\n";
+      myfile << "signal syst " << sample_names_sig[k] << " " << "signal_"+syst_names_sig[kk]+"Up" << " " << sig_hist_syst_up->Integral(1,6000) << "\n";
+      myfile_temp << "signal syst " << sample_names_sig[k] << " " << "signal_"+syst_names_sig[kk]+"Up" << " " << sig_hist_syst_up->Integral(1,6000) << "\n";
 
       sig_hist_syst_down->SetName("signal_"+syst_names_sig[kk]+"Down");
       sig_hist_syst_down->Write();
-      myfile << "signal syst " << sample_names_sig[k] << " " << syst_names[kk]+"Down" << " " << sig_hist_syst_down->Integral(1,6000) << "\n";
-      myfile_temp << "signal syst " << sample_names_sig[k] << " " << syst_names[kk]+"Down" << " " << sig_hist_syst_down->Integral(1,6000) << "\n";
+      myfile << "signal syst " << sample_names_sig[k] << " " << "signal_"+syst_names[kk]+"Down" << " " << sig_hist_syst_down->Integral(1,6000) << "\n";
+      myfile_temp << "signal syst " << sample_names_sig[k] << " " << "signal_"+syst_names[kk]+"Down" << " " << sig_hist_syst_down->Integral(1,6000) << "\n";
 
       if (debug) std::cout << "Will delete hist_syst_up hist_syst_down "<< std::endl;
 
