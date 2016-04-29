@@ -20,8 +20,8 @@ fi
 echo "MAKE sure that you edited EmuSpectrum_datacard.txt which is used as input for the limit calculation!!!!!"
 sleep 5
 
-mass_min=2500
-mass_max=5000
+mass_min=500
+mass_max=1500
 
 mass_binning=500
 
